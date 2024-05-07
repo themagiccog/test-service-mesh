@@ -40,7 +40,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin4_container
+    container_name: pgadmin4
     restart: always
     ports:
       - "8888:80" #"host-port:container-port"
@@ -57,7 +57,7 @@ services:
         condition: service_healthy #service_started
 
   api:
-    container_name: api-todo
+    container_name: fastapi-api
     build: ./backend/
     # build:
     #   context: .
@@ -83,14 +83,13 @@ services:
         condition: service_healthy #service_started
 
   web:
+    container_name: react-web
     build: 
       context: ./frontend/
-      args:
-        REACT_APP_API_URL: http://localhost:8007
     ports:
       - "8080:80"
     environment:
-      - REACT_APP_API_URL=http://loc:8007
+      - REACT_APP_API_URL=http://localhost:8007
     networks:
       - backend
     depends_on:

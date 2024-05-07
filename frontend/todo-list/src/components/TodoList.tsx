@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 
-const API_URL = process.env.REACT_APP_API_URL || 'xhttp://localhostx:8008';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhostx:8008';
 
 
 interface TodoItem {

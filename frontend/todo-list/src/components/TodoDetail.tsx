@@ -10,7 +10,7 @@ interface TodoItem {
     completed: boolean;
 }
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8008';
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhostx:8008';
 
 function TodoDetail() {
     // We utilize 'useState' below. For more: https://react.dev/learn#updating-the-screen)
