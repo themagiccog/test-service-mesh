@@ -92,17 +92,15 @@ services:
       - REACT_APP_API_URL=http://localhost:8007
     networks:
       - backend
+    # healthcheck:
+    #   test: ["CMD-SHELL", "curl -f http://localhost:8080 | exit 1"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 10
+    #   start_period: 60s
     depends_on:
       api:
         condition: service_started
-
-  # web:
-  #   build: .
-  #   ports:
-  #     - "80:80"
-  #   environment:
-  #     - REACT_APP_API_URL=http://localhost:8008
-
 
 
 networks:
