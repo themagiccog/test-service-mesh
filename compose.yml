@@ -1,0 +1,113 @@
+
+
+  # Uncomment below to include a PostgreSQL database
+  # db:
+  #   image: postgres:13
+  #   environment:
+  #     POSTGRES_DB: fastapidb
+  #     POSTGRES_USER: user
+  #     POSTGRES_PASSWORD: password
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+
+# Volumes definition for persistence
+# volumes:
+#   postgres_data:
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: tododb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    container_name: postgres-db
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    volumes:
+      - /home/cog/poc/service-mesh/postgres/data:/var/lib/postgresql/data/
+      # - C:\service-mesh\backend\postgres\datax:/var/lib/postgresql/data/
+      # - ./initdb:/docker-entrypoint-initdb.d #(test this)probably, not needed if we do kc.sh --auto-build 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d tododb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - backend
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "8888:80" #"host-port:container-port"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: me@cog.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    volumes:
+      - /home/cog/poc/service-mesh/backend/pgadmin/data:/var/lib/pgadmin
+      # - C:\service-mesh\backend\pgadmin\datax:/var/lib/pgadmin
+    networks:
+      - backend
+    depends_on:
+      db:
+        condition: service_healthy #service_started
+
+  api:
+    container_name: api-todo
+    build: ./backend/
+    # build:
+    #   context: .
+    #   dockerfile: api.Dockerfile
+    ports:
+      - "8007:8000"
+    volumes:
+      - ./backend:/app #copies everything in $(pwd) [in host] to /app [in container]
+    command: ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    environment:
+      - MODULE_NAME=main
+      - VARIABLE_NAME=app
+      - LOG_LEVEL=info
+      - POSTGRES_HOST=db
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=tododb
+      - USE_SQLITE=false
+    networks:
+      - backend
+    depends_on:
+      db:
+        condition: service_healthy #service_started
+
+  web:
+    build: 
+      context: ./frontend/
+      args:
+        REACT_APP_API_URL: http://localhost:8007
+    ports:
+      - "8080:80"
+    environment:
+      - REACT_APP_API_URL=http://loc:8007
+    networks:
+      - backend
+    depends_on:
+      api:
+        condition: service_started
+
+  # web:
+  #   build: .
+  #   ports:
+  #     - "80:80"
+  #   environment:
+  #     - REACT_APP_API_URL=http://localhost:8008
+
+
+
+networks:
+  backend:
+    name: user-management
+    driver: bridge
+

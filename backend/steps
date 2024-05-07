@@ -1,0 +1,22 @@
+python3 -m venv .venv
+source .venv/bin/activate  
+
+pip install -r requirements.txt 
+
+uvicorn backend.main:app --port 8008  --reload
+
+#git
+
+
+git init
+git add .     
+git add .   
+git branch -M main
+git remote add origin git@github.com:themagiccog/fastapi-html-todo.git
+git push -u origin main
+
+
+git remote add fastapi-html-todo https://github.com/themagiccog/fastapi-html-todo
+git push fastapi-html-todo
+
+https://github.dev/ChristopherGS/ultimate-fastapi-tutorial/blob/97b72d1dbc5da8bbb40ac04ccfb007835342c6ce/part-06b-basic-deploy-linode/app/main.py#L28%23L31
