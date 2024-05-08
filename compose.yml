@@ -26,7 +26,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - /home/cog/poc/service-mesh/postgres/data:/var/lib/postgresql/data/
+      - ./aux/postgres/data:/var/lib/postgresql/data/
       # - C:\service-mesh\backend\postgres\datax:/var/lib/postgresql/data/
       # - ./initdb:/docker-entrypoint-initdb.d #(test this)probably, not needed if we do kc.sh --auto-build 
     healthcheck:
