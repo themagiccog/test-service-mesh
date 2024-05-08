@@ -48,7 +48,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: me@cog.com
       PGADMIN_DEFAULT_PASSWORD: password
     volumes:
-      - /home/cog/poc/service-mesh/backend/pgadmin/data:/var/lib/pgadmin
+      - ./aux/pgadmin/data:/var/lib/pgadmin
       # - C:\service-mesh\backend\pgadmin\datax:/var/lib/pgadmin
     networks:
       - backend
@@ -65,7 +65,7 @@ services:
     ports:
       - "8007:8000"
     volumes:
-      - ./backend:/app #copies everything in $(pwd) [in host] to /app [in container]
+      - ./backend:/app #mounts everything in $(pwd)/backend [in host] to /app [in container]
     command: ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
     environment:
       - MODULE_NAME=main
@@ -88,6 +88,8 @@ services:
       context: ./frontend/
     ports:
       - "8080:80"
+    volumes:
+      - ./frontend/todo-list:/usr/src/app
     environment:
       - REACT_APP_API_URL=http://localhost:8007
     networks:
@@ -101,7 +103,6 @@ services:
     depends_on:
       api:
         condition: service_started
-
 
 networks:
   backend:
