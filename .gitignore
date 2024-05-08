@@ -1,3 +1,7 @@
 api/.venv
 backend/.venv
 backend/api/__pycache__
+!aux/postgres/data/_
+!aux/pgadmin/data/_
+aux/postgres/data/*
+aux/pgadmin/data/*
